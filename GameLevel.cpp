@@ -1,11 +1,4 @@
-/*******************************************************************
-** This code is part of Breakout.
-**
-** Breakout is free software: you can redistribute it and/or modify
-** it under the terms of the CC BY 4.0 license as published by
-** Creative Commons, either version 4 of the License, or (at your
-** option) any later version.
-******************************************************************/
+
 #include "GameLevel.h"
 
 #include <fstream>
@@ -14,9 +7,7 @@
 
 void GameLevel::Load(const char* file, unsigned int levelWidth, unsigned int levelHeight)
 {
-    // clear old data
     this->Bricks.clear();
-    // load from file
     unsigned int tileCode;
     GameLevel level;
     std::string line;
@@ -24,11 +15,11 @@ void GameLevel::Load(const char* file, unsigned int levelWidth, unsigned int lev
     std::vector<std::vector<unsigned int>> tileData;
     if (fstream)
     {
-        while (std::getline(fstream, line)) // read each line from level file
+        while (std::getline(fstream, line))
         {
             std::istringstream sstream(line);
             std::vector<unsigned int> row;
-            while (sstream >> tileCode) // read each word separated by spaces
+            while (sstream >> tileCode)
                 row.push_back(tileCode);
             tileData.push_back(row);
         }
@@ -54,17 +45,14 @@ bool GameLevel::IsCompleted()
 
 void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, unsigned int levelWidth, unsigned int levelHeight)
 {
-    // calculate dimensions
     unsigned int height = tileData.size();
-    unsigned int width = tileData[0].size(); // note we can index vector at [0] since this function is only called if height > 0
+    unsigned int width = tileData[0].size();
     float unit_width = levelWidth / static_cast<float>(width), unit_height = levelHeight / height;
-    // initialize level tiles based on tileData		
     for (unsigned int y = 0; y < height; ++y)
     {
         for (unsigned int x = 0; x < width; ++x)
         {
-            // check block type from level data (2D level array)
-            if (tileData[y][x] == 1) // solid
+            if (tileData[y][x] == 1)
             {
                 glm::vec2 pos(unit_width * x, unit_height * y);
                 glm::vec2 size(unit_width, unit_height);
@@ -72,9 +60,9 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, unsigned i
                 obj.IsSolid = true;
                 this->Bricks.push_back(obj);
             }
-            else if (tileData[y][x] > 1)	// non-solid; now determine its color based on level data
+            else if (tileData[y][x] > 1)
             {
-                glm::vec3 color = glm::vec3(1.0f); // original: white
+                glm::vec3 color = glm::vec3(1.0f);
                 if (tileData[y][x] == 2)
                     color = glm::vec3(0.2f, 0.6f, 1.0f);
                 else if (tileData[y][x] == 3)
